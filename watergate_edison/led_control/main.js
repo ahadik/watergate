@@ -26,7 +26,7 @@ ledAPin.dir(mraa.DIR_OUT); //set the gpio direction to output
 readAPin.dir(mraa.DIR_IN);
 //ledAPin.write(1);
 
-//readInLoop();
+readInLoop();
 function readInLoop(){
     var level = readAPin.read();
     console.log(level);
