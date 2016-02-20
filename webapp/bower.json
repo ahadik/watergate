@@ -1,0 +1,24 @@
+{
+  "name": "watergate",
+  "main": "index.js",
+  "version": "0.0.0",
+  "authors": [
+    "Alexander Hadik"
+  ],
+  "license": "Apache-2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "singularity": "~1.6.2",
+    "breakpoint-sass": "~2.6.1"
+  },
+  "devDependencies": {
+    "sass-toolkit": "~2.9.0",
+    "ibm-colors": "~1.4.0"
+  }
+}
