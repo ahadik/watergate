@@ -3,10 +3,10 @@
     "projectSettingsVersion": "2.0.0",
     "creationData": {
       "projectTypeName": "com.intel.xdk.projecttype.iotapp",
-      "src": "iotapp/iotapp-template-analog-read/sample.zip",
-      "projectGuid": "92456697-b53c-49ac-9f29-ed522adf8c65",
-      "lastModifiedDate": 1455988358422,
-      "creationDate": 1455988358333
+      "src": "iotapp/iotapp-template-onboard-led-blink/sample.zip",
+      "projectGuid": "f519d5e9-f7d5-4668-9edd-32916a26f06c",
+      "lastModifiedDate": 1455999955440,
+      "creationDate": 1455999955350
     },
     "sourceDirectory": "",
     "cordovaPluginsDirectory": "plugins",
