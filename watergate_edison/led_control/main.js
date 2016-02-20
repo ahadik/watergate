@@ -24,11 +24,15 @@ var ledAPin = new mraa.Gpio(4); //LED hooked up to digital pin 13 (or built in p
 var readAPin = new mraa.Gpio(3);
 ledAPin.dir(mraa.DIR_OUT); //set the gpio direction to output
 readAPin.dir(mraa.DIR_IN);
-//ledAPin.write(1);
+ledAPin.write(1);
 
 readInLoop();
 function readInLoop(){
-    var level = readAPin.read();
-    console.log(level);
-    readInLoop();
+	while True{
+		var level = readAPin.read();
+		console.log(level);
+	}
+
+
+
 }
