@@ -17,11 +17,11 @@ Article: https://software.intel.com/en-us/html5/articles/intel-xdk-iot-edition-n
 */
 
 var mraa = require('mraa'); //require mraa
-console.log('MRAA Version: ' + mraa.getVersion()); //write the mraa version to the Intel XDK console
+var groveSensor = require('jsupm_grove');
 
 //var myOnboardLed = new mraa.Gpio(3, false, true); //LED hooked up to digital pin (or built in pin on Galileo Gen1)
 var ledAPin = new mraa.Gpio(4); //LED hooked up to digital pin 13 (or built in pin on Intel Galileo Gen2 as well as Intel Edison)
-var readAPin = new mraa.Gpio(3);
+var readAPin = new groveSensor.GroveLight(0);
 ledAPin.dir(mraa.DIR_OUT); //set the gpio direction to output
 readAPin.dir(mraa.DIR_IN);
 ledAPin.write(1);
@@ -29,7 +29,7 @@ ledAPin.write(1);
 readInLoop();
 function readInLoop(){
 	while True{
-		var level = readAPin.read();
+		var level = readAPin.raw_value();
 		console.log(level);
 	}
 

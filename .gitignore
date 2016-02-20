@@ -22,10 +22,12 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
-# Dependency directory
+# Dependency directories
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 webapp/node_modules
 webapp/bower_components
+watergate_edison/led_control/node_modules
+watergate_edison/node_modules
 
 # Public folder
 webapp/public
