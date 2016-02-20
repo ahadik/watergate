@@ -6,7 +6,8 @@ var express = require("express"),
 var mURL = "";
 //if dev
 if (process.env.ENVIRONMENT == "dev") {
-  mURL = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONG_PASS + '@aws-us-east-1-portal.10.dblayer.com:10576/watergatedb-dev';
+  mURL = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONG_PASS +
+      '@aws-us-east-1-portal.10.dblayer.com:10576,aws-us-east-1-portal.11.dblayer.com:27055/watergatedb-dev';
 }
 mongoose.connect('mURL');
 var db = mongoose.connection; //db = mongoose connection
