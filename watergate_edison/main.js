@@ -126,7 +126,9 @@ function analyzeTrigger(sensorTriggered, triggerPair, lastTriggerTime){
 	return {pair : triggerPair, flowDir : dir, triggerTime : lastTriggerTime};
 }
 
+console.log("Calibrating...");
 var calibration = calibrate();
+console.log("Running main loop...");
 track(calibration.aAvg, calibration.bAvg, readAPin, readBPin);
 
 function track(aAvg, bAvg, aRead, bRead){
