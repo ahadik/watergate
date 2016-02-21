@@ -24,7 +24,7 @@ db.once('open', function() {
 /**DEFINE SCHEMA**/
 //pole object
 var poleSchema = mongoose.Schema({
-    name: String, //not sure necessary, but names yay
+    //name: String, //not sure necessary, but names yay
     deviceID: String, //human made unique device id
     lat: {
         type: Number,
@@ -64,14 +64,14 @@ app.post("/register_pole", function(req, res) {
     console.log('registering pole', req.query.name);
     //Create a new pole object with passed in info
     var pole = new Pole({
-        name: req.query.name,
+        // name: req.query.name,
         deviceID: req.query.deviceID,
-        lat: req.query.lat,
-        long: req.query.long
-        // name: "name", //req.query.name,
+        // lat: req.query.lat,
+        // long: req.query.long
+        //name: "name", //req.query.name,
         // deviceID: "blarg", //req.query.deviceID,
-        // lat: 1, //req.query.lat,
-        // long: 2 //req.query.long
+        lat: 1, //req.query.lat,
+        long: 2 //req.query.long
     });
     console.log(pole.toString());
     //Save the new pole

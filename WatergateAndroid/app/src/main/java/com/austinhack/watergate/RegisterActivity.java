@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,7 +35,10 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         //.setAction("Action", null).show();
-                NetworkRequest("register_pole?name=john&deviceID=d1&lat=1&long=2");
+                EditText deviceIDInput = (EditText) findViewById(R.id.textDeviceID);
+                String deviceID = deviceIDInput.getText().toString();
+
+                NetworkRequest("register_pole?deviceID=" + deviceID + "&lat=1&long=2");
 
             }
         });
@@ -64,7 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void NetworkRequest (String dest) {
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://10.11.16.134:8080/" + dest;
+        String url = "http://192.168.1.72:8080/" + dest; //Remember to update this each time
         Log.i("DEBUG", url);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
