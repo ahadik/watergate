@@ -1,6 +1,7 @@
 var mraa = require('mraa'); //require mraa
 var groveSensor = require('jsupm_grove');
 var sleep = require('sleep');
+var LCD = require('jsupm_i2clcd');
 var doubleTriggerError = require('./errors/doubleTrigger');
 
 //var myOnboardLed = new mraa.Gpio(3, false, true); //LED hooked up to digital pin (or built in pin on Galileo Gen1)
@@ -9,6 +10,9 @@ var ledBPin = new mraa.Gpio(4);
 var readAPin = new groveSensor.GroveLight(0);
 var readBPin = new groveSensor.GroveLight(1);
 ledAPin.dir(mraa.DIR_OUT); //set the gpio direction to output
+ledBPin.dir(mraa.DIR_OUT); //set the gpio direction to output
+var myLcd = new LCD.Jhd1313m1(0);
+myLcd.setColor(64,255,64);
 
 var height = 0;
 var speed = 0;
@@ -239,6 +243,7 @@ function track(aAvg, bAvg, aRead, bRead){
 				//process.stdout.cursorTo(0);
 				//process.stdout.write(String(height));
 				console.log(String(height));
+				myLcd.write(String(height));
 			}
 		}
 	}
