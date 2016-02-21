@@ -25,12 +25,12 @@ var ledBPin = new.mraa.Gpio(4);
 var readAPin = new groveSensor.GroveLight(0);
 var readBPin = new groveSensor.GroveLight(1);
 ledAPin.dir(mraa.DIR_OUT); //set the gpio direction to output
-readAPin.dir(mraa.DIR_IN);
+
 ledAPin.write(1);
 
 readInLoop();
 function readInLoop(){
-	while True{
+	while (true){
 		var level = readAPin.raw_value();
 		console.log(level);
 	}
