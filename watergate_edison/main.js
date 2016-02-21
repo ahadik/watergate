@@ -13,6 +13,7 @@ ledAPin.dir(mraa.DIR_OUT); //set the gpio direction to output
 var height = 0;
 var speed = 0;
 var increment = 1.45;
+var triggerLevel = 200;
 
 var sumArray = function(prevVal, currVal, currI, array){
 	return prevVal + currVal;
@@ -53,7 +54,7 @@ OUTPUT:
 	false: the sensor is not sufficiently triggered
 */
 function sensorTest(level, avg){
-	if (level > avg+200){
+	if (level > avg+triggerLevel){
 		return true;
 	}
 	return false;
@@ -191,8 +192,8 @@ function track(aAvg, bAvg, aRead, bRead){
 		//process.stdout.clearLine();
 		//process.stdout.cursorTo(0);
 		//process.stdout.write("Direction: "+String(dir)+"State: "+String(currState));
-		console.log("Direction: "+String(dir));
-		console.log("State: "+String(currState));
+		//console.log("Direction: "+String(dir));
+		//console.log("State: "+String(currState));
 		if (currState != 0){
 			if (dir == 1){
 				height+=increment;
@@ -200,9 +201,10 @@ function track(aAvg, bAvg, aRead, bRead){
 				height-=increment;
 			}
 			if (dir != null){
-				process.stdout.clearLine();
-				process.stdout.cursorTo(0);
-				process.stdout.write(String(height));
+				//process.stdout.clearLine();
+				//process.stdout.cursorTo(0);
+				//process.stdout.write(String(height));
+				console.log(String(height));
 			}
 		}
 	}
