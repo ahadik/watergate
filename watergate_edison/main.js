@@ -173,7 +173,7 @@ function track(aAvg, bAvg, aRead, bRead){
 				currState = 1;
 			}else if (bTrigger){
 				if (currState!=2){
-					var triggerAnalysis = analyzeTrigger(1);
+					var triggerAnalysis = analyzeTrigger(1, triggerPair, lastTriggerTime);
 					triggerPair = triggerAnalysis.pair;
 					if (triggerAnalysis.flowDir != null){
 						dir = triggerAnalysis.flowDir;
