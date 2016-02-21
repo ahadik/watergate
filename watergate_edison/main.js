@@ -236,6 +236,7 @@ function track(aAvg, bAvg, aRead, bRead){
 			}
 			if (dir != null){
 				console.log(String(height.toFixed(2)));
+				myLcd.clear();
 				myLcd.write(String(height.toFixed(2)));
 				if (height > storedHeight+5){
 					storedHeight = height;
