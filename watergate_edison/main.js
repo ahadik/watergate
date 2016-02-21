@@ -13,7 +13,7 @@ ledAPin.dir(mraa.DIR_OUT); //set the gpio direction to output
 var height = 0;
 var speed = 0;
 var increment = 1.45;
-var triggerLevel = 200;
+var triggerLevel = 350;
 
 var sumArray = function(prevVal, currVal, currI, array){
 	return prevVal + currVal;
