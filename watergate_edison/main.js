@@ -4,6 +4,7 @@ var sleep = require('sleep');
 var LCD = require('jsupm_i2clcd');
 var doubleTriggerError = require('./errors/doubleTrigger');
 var request = require('request');
+var AsyncQueue = require('async-queue');
 
 var deviceID=123;
 
@@ -16,6 +17,14 @@ ledAPin.dir(mraa.DIR_OUT); //set the gpio direction to output
 ledBPin.dir(mraa.DIR_OUT); //set the gpio direction to output
 var myLcd = new LCD.Jhd1313m1(0);
 myLcd.setColor(64,255,64);
+
+var q = async.queue(function (task, done) {
+    request.post(task.url, task.form, function(err, res, body) {
+        if (err) return done(err);
+        if (res.statusCode != 200) return done(res.statusCode);
+        done();
+    });
+}, 5);
 
 var storedHeight = 0;
 var height = 0;
@@ -229,6 +238,8 @@ function track(aAvg, bAvg, aRead, bRead){
 			console.log(err.message);
 		}
 
+
+
 		if (currState != 0){
 			if (dir == 1){
 				height+=increment;
@@ -242,21 +253,7 @@ function track(aAvg, bAvg, aRead, bRead){
 				if (height > (storedHeight+5)){
 					storedHeight = height;
 					console.log("POST");
-					request.post({url : 'http://10.11.16.134:8080/post_measurement', form : {}});
-					/*
-					request(
-						{
-						  url:     'http://10.11.16.134:8080/post_measurement',
-						  json: true,
-						  form:    {deviceID : deviceID, waterLevel : String(height.toFixed(2))}
-						},	function (error, response, body) {
-							console.log("HERE!");
-							if (!error && response.statusCode == 200) {
-								console.log(body)
-							}
-						}
-					);
-				*/
+					q.push({ url: 'http://10.11.16.134:8080', form : {deviceID : deviceID, waterLevel : height.toFixed(2)} });
 				}
 			}
 		}

@@ -11,6 +11,7 @@
   	"jsupm_i2clcd" : "^0.4.1",
   	"sleep" : "^3.0.1",
 	"mraa" : "^0.9.3",
-	"request" : "2.69.0"
+	"request" : "2.69.0",
+	"async-queue" : "0.1.0"
   }
 }
