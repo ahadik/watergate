@@ -1,5 +1,4 @@
 applications:
-<<<<<<< HEAD
   - disk_quota: 1024M
     host: Watergate
     name: Watergate
@@ -7,12 +6,3 @@ applications:
     domain: mybluemix.net
     instances: 1
     memory: 256M
-=======
-- path: .
-  memory: 256M
-  instances: 1
-  domain: mybluemix.net
-  name: Watergate
-  host: watergate
-  disk_quota: 1024M
->>>>>>> 88c8c980b3f8fd1a76a1b76d342b634e54faeecc
