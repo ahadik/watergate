@@ -188,9 +188,11 @@ function track(aAvg, bAvg, aRead, bRead){
 			console.log(err.stack);
 			console.log(err.message);
 		}
-		process.stdout.clearLine();
-		process.stdout.cursorTo(0);
-		process.stdout.write("Direction: "+String(dir)+" State: "+String(currState));
+		//process.stdout.clearLine();
+		//process.stdout.cursorTo(0);
+		//process.stdout.write("Direction: "+String(dir)+"State: "+String(currState));
+		console.log("Direction: "+String(dir));
+		console.log("State: "+String(currState));
 		if (currState != 0){
 			if (dir == 1){
 				height+=increment;
