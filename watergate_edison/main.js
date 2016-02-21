@@ -14,6 +14,8 @@ var height = 0;
 var speed = 0;
 var increment = 1.45;
 var triggerLevel = 350;
+var currPair = null;
+var currDiff = false;
 
 var sumArray = function(prevVal, currVal, currI, array){
 	return prevVal + currVal;
@@ -81,15 +83,35 @@ OUTPUT:
 */
 function analyzeTriggerPair(pair){
 	try{
+		var isDiff = true;
 		//if the entries are equal, we don't know if the trolley is traveling up or down
 		if (pair[0] == pair[1]){
-			return null;
+			if (pair[0] == 0){
+				if (currPair == 0){
+					isDiff = false;
+				}
+				currPair = 0;
+			}else{
+				if (currPair == 3){
+					isDiff = false;
+				}
+				currPair = 3;
+			}
+			return {diff : isDiff, dir: null};
 		//if Sensor A was triggered, and then Sensor B, the trolley is traveling up
 		}else if ((pair[0]==0) && (pair[1]==1)){
-			return 1;
+			if (currPair == 1){
+				isDiff = false;
+			}
+			currPair = 1;
+			return {diff : isDiff, dir: 1};
 		//if Sensor B was triggered, and then Sensor A, the trolley is traveling down
 		}else if ((pair[0]==1) && (pair[1]==0)){
-			return 0;
+			if (currPair == 2){
+				isDiff = false;
+			}
+			currPair = 2;
+			return {diff : isDiff, dir: 0};
 		//if none of these cases apply, invalid values were provided
 		}else{
 			throw new invalidPairError('Trigger Pair contains values ['+pair[0]+','+pair[1]+']. Valid pair values are 0 and 1.', 0);
@@ -120,7 +142,10 @@ function analyzeTrigger(sensorTriggered, triggerPair, lastTriggerTime){
 	}else if (triggerPair[1] == null){
 		triggerPair[1] = sensorTriggered;
 		lastTriggerTime = new Date().getTime();
-		dir = analyzeTriggerPair(triggerPair);
+		pairResults = analyzeTriggerPair(triggerPair);
+		currDiff = pairResults.diff;
+		dir = pairResults.dir;
+
 		triggerPair = [null, null];
 	//if neither value is null, something bad has happened
 	}else{
@@ -200,7 +225,7 @@ function track(aAvg, bAvg, aRead, bRead){
 		//process.stdout.write("Direction: "+String(dir)+"State: "+String(currState));
 		//console.log("Direction: "+String(dir));
 		//console.log("State: "+String(currState));
-		if (currState != 0){
+		if (currState != 0 && currDiff){
 			if (dir == 1){
 				height+=increment;
 			}else if(dir == 0){
