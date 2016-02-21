@@ -29,14 +29,14 @@ ACTION:
 OUTPUT:
 	Object with aAvg and bAvg attributes, each the average reading of the two sensors over 10 seconds
 */
-function calibrate(aLED, bLED, aRead, bRead){
-	aLED.write(0);
-	bLED.write(0);
+function calibrate(){
+	ledAPin.write(0);
+	ledBPin.write(0);
 	var aSet = [];
 	var bSet = [];
 	for (var i = 0; i<20; i++){
-		aSet.push(aRead.raw_value());
-		bSet.push(bRead.raw_value());
+		aSet.push(readAPin.raw_value());
+		bSet.push(readBPin.raw_value());
 		sleep.usleep(500000);
 	}
 	var aAvg = aSet.reduce(sumArray)/aSet.length;
@@ -47,7 +47,7 @@ function calibrate(aLED, bLED, aRead, bRead){
 /*
 INPUT:
 	level: reading from a given sensor
-	avg: the average reading from the sensor during callibration
+	avg: the average reading from the sensor during calibration
 OUTPUT:
 	true: the sensor is sufficiently triggered
 	false: the sensor is not sufficiently triggered
@@ -126,7 +126,7 @@ function analyzeTrigger(sensorTriggered, triggerPair, lastTriggerTime){
 	return {pair : triggerPair, flowDir : dir, triggerTime : lastTriggerTime};
 }
 
-var callibration = calibrate();
+var calibration = calibrate();
 track(callibration.aAvg, callibration.bAvg, readAPin, readBPin);
 
 function track(aAvg, bAvg, aRead, bRead){
