@@ -82,8 +82,8 @@ app.get("/measurements", function (req, res) {
         if (err) return console.error(err);
         console.log(measurements);
         data = measurements;
+        res.render(path.join(__dirname, "public", "index.html"), {test: data}); //Handlebars stuff
     });
-    res.render(path.join(__dirname, "public", "index.html"), {test: JSON.stringify(data)}); //Handlebars stuff
 
 });
 
@@ -116,17 +116,23 @@ app.post("/register_pole", function(req, res) {
 
 });
 
+function makeData() {
+    for (var i = 0; i < 15; i++) {
+
+    }
+}
+
 
 //Update a poles measurements
 //use deviceID to find and update various measurements
 app.post("/post_measurement", function(req, res) {
-    console.log('starting update');
+    console.log('starting update', req.body);
     //Should find a single document of measurements based on given deviceID
     Measurement.findOne({
         deviceID: req.query.deviceID
     }, function(err, m) {
         if (err) return console.error(err);
-        if (typeof m === 'undefined') { //if no device found with that ID create a new one
+        if (typeof m === 'undefined' || m === null) { //if no device found with that ID create a new one
             m = new Measurement({
                 deviceID: req.query.deviceID, //human made unqiue device ID (stored on device)
                 measurements: [{
@@ -135,7 +141,7 @@ app.post("/post_measurement", function(req, res) {
             });
 
         } else { //if m is found just update waterlevel
-            console.log(m);
+            console.log(m.toString());
 
             //Add new water level measurement (and clarity if we have it)
             m.measurements.push({
@@ -146,7 +152,7 @@ app.post("/post_measurement", function(req, res) {
         //save updated m
         m.save(function(err, m) {
             if (err) return console.error(err);
-            console.log('updated', m);
+            console.log('updated', m.toString());
         }).then(function (product) {
             console.log("product", product.toString());
             emitData(product);
