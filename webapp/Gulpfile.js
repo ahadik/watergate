@@ -88,7 +88,7 @@ gulp.task('html', function() {
   gulp.src(dirs.html)
     .pipe(gulp.dest(dirs.public))
     .pipe(browserSync.stream());
-})
+});
 
 gulp.task('html:watch', function () {
   gulp.watch(dirs.html, ['html']);
