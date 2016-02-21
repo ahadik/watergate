@@ -53,7 +53,7 @@ OUTPUT:
 	false: the sensor is not sufficiently triggered
 */
 function sensorTest(level, avg){
-	if (level > avg+50){
+	if (level > avg+450){
 		return true;
 	}
 	return false;
