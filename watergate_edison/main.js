@@ -66,6 +66,7 @@ OUTPUT:
 	the speed at which the trolley traveled between slits in centimeters per second
 */
 function calcSpeed(lastTriggerTime){
+	var currTime = new Date().getTime();
 	return increment/(currTime-lastTriggerTime)*1000;
 }
 
@@ -118,7 +119,7 @@ function analyzeTrigger(sensorTriggered, triggerPair, lastTriggerTime){
 	}else if (triggerPair[1] == null){
 		triggerPair[1] = sensorTriggered;
 		lastTriggerTime = new Date().getTime();
-		dir = analyzeTriggerPair();
+		dir = analyzeTriggerPair(triggerPair);
 		triggerPair = [null, null];
 	//if neither value is null, something bad has happened
 	}else{
