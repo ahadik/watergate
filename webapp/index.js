@@ -11,12 +11,15 @@ if (process.env.ENVIRONMENT == "dev") {
 } else { //production
     mURL = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASS + '@aws-us-east-1-portal.10.dblayer.com:10576,aws-us-east-1-portal.11.dblayer.com:27055/watergatedb';
 }
-mongoose.connect(mURL);
+mongoose.connect(mURL, function (err) {
+    console.log(err);
+});
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Mongodb connection error:'));
 db.once('open', function() {
     console.log('connected to mongodb');
 });
+
 
 /**DEFINE SCHEMA**/
 //pole object
@@ -61,14 +64,14 @@ app.post("/register_pole", function(req, res) {
     console.log('registering pole', req.query.name);
     //Create a new pole object with passed in info
     var pole = new Pole({
-        // name: req.query.name,
-        // deviceID: req.query.deviceID,
-        // lat: req.query.lat,
-        // long: req.query.long
-        name: "name", //req.query.name,
-        deviceID: "blarg", //req.query.deviceID,
-        lat: 1, //req.query.lat,
-        long: 2 //req.query.long
+        name: req.query.name,
+        deviceID: req.query.deviceID,
+        lat: req.query.lat,
+        long: req.query.long
+        // name: "name", //req.query.name,
+        // deviceID: "blarg", //req.query.deviceID,
+        // lat: 1, //req.query.lat,
+        // long: 2 //req.query.long
     });
     console.log(pole.toString());
     //Save the new pole
