@@ -86,7 +86,6 @@ OUTPUT:
 	1: the trolley is traveling up
 */
 function analyzeTriggerPair(pair){
-	console.log(pair);
 	try{
 		var isDiff = true;
 		//if the entries are equal, we don't know if the trolley is traveling up or down
@@ -225,15 +224,8 @@ function track(aAvg, bAvg, aRead, bRead){
 			console.log(err.stack);
 			console.log(err.message);
 		}
-		//process.stdout.clearLine();
-		//process.stdout.cursorTo(0);
-		//process.stdout.write("Direction: "+String(dir)+"State: "+String(currState));
-		//console.log("Direction: "+String(dir));
-		//console.log("State: "+String(currState));
-		if(currDiff){
-			console.log(currPair);
-		}
-		if (currState != 0 && currDiff){
+
+		if (currState != 0){
 			if (dir == 1){
 				height+=increment;
 			}else if(dir == 0){
