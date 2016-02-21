@@ -34,7 +34,7 @@ function calibrate(){
 	ledBPin.write(0);
 	var aSet = [];
 	var bSet = [];
-	for (var i = 0; i<20; i++){
+	for (var i = 0; i<10; i++){
 		aSet.push(readAPin.raw_value());
 		bSet.push(readBPin.raw_value());
 		sleep.usleep(500000);
