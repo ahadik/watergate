@@ -3,88 +3,114 @@ var express = require("express"),
     app = express(),
     mongoose = require('mongoose');
 
+/**SET MongoDB URL**/
 var mURL = "";
-//if dev
 if (process.env.ENVIRONMENT == "dev") {
-  mURL = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONG_PASS + '@aws-us-east-1-portal.10.dblayer.com:10576/watergatedb-dev';
+    mURL = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASS + '@aws-us-east-1-portal.10.dblayer.com:10576/watergatedb-dev';
 } else {
-  mURL = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONG_PASS + '@aws-us-east-1-portal.10.dblayer.com:10576,aws-us-east-1-portal.11.dblayer.com:27055/watergatedb';
+    mURL = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASS + '@aws-us-east-1-portal.10.dblayer.com:10576,aws-us-east-1-portal.11.dblayer.com:27055/watergatedb';
 }
 mongoose.connect(mURL);
-var db = mongoose.connection; //db = mongoose connection
+var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Mongodb connection error:'));
 db.once('open', function() {
-  console.log('connected to mongodb');
+    console.log('connected to mongodb');
 });
 
+/**DEFINE SCHEMA**/
+//pole object
 var poleSchema = mongoose.Schema({
-    name: String,
-    deviceID: String,
-    lat: Number,
-    long: Number,
-    test: [{
-      blah: Number
-    }]
+    name: String, //not sure necessary, but names yay
+    deviceID: String, //human made unique device id
+    lat: {
+        type: Number,
+        default: 0
+    }, //latitude
+    long: {
+        type: Number,
+        default: 0
+    } //longitude
 });
 var Pole = mongoose.model('Pole', poleSchema);
 
+//schema for measurements
 var measurementSchema = mongoose.Schema({
-  boardID: Number,
-  measurements: [{
-    waterLevel: Number,
-    clarity: Number,
-    timestamp: { type: Date, default: Date.now }
-  }]
+    deviceID: String, //human made unqiue device ID (stored on device)
+    measurements: [{
+        waterLevel: {
+            type: Number,
+            default: -1
+        }, //water level in CM
+        clarity: {
+            type: Number,
+            default: -1
+        }, //Clarity level in Turbidity?
+        timestamp: {
+            type: Date,
+            default: Date.now
+        }
+    }]
 });
 var Measurement = mongoose.model('Measurement', measurementSchema);
 
-var aPoleID;
+
+/**API CALLS**/
+
 //register a Pole
-//Should not always be a new object, may just change lat and longitude
-app.post("/register_pole", function (req, res) {
-  console.log(req);
-  var pole = new Pole({
-    // name: req.name,
-    // deviceID: req.deviceID,
-    // lat: req.lat,
-    // long: req.long,
-    name: "blah",
-    deviceID: "blah",
-    lat: 2,
-    long: 4,
-    test: [{
-      blah: 1
-    }]
-  });
+app.post("/register_pole", function(req, res) {
+    console.log('registering pole');
+    //Need to confirm that req is formatted properly-------
+    //Create a new pole object with passed in info
+    var pole = new Pole({
+        name: req.name,
+        deviceID: req.deviceID,
+        lat: req.lat,
+        long: req.long
+    });
 
-  pole.save(function (err, pole) {
-    if (err) return console.error(err);
-    console.log("saved", pole);
-  }).then(function(product) {
-    console.log("product", product);
-    aPoleID = product._id;
-  });
+    //Save the new pole
+    pole.save(function(err, pole) {
+        if (err) return console.error(err);
+        console.log("pole saved", pole.toString());
+    });
+    // .then(function(product) {
+    //   console.log("product", product.toString());
+    // });
 
-  res.send('hey');
-  //res.send the generated pole id back?
 });
 
-//Find a pole
-app.post("/update_pole", function (req, res) {
-  Pole.findById(aPoleID, function (err, pole) {
-    if (err) return console.error(err);
-    console.log(pole);
-    pole.test.push({
-      blah: 1001
-    });
+//Update a poles measurements
+//use deviceID to find and update various measurements
+app.post("/post_measurement", function(req, res) {
+    console.log('starting update');
+    //Should find a single document of measurements based on given deviceID
+    Measurement.findOne({
+        deviceID: req.deviceID
+    }, function(err, m) {
+        if (err) return console.error(err);
+        if (typeof m === 'undefined') { //if no device found with that ID create a new one
+            var measurement = new Measurement({
+                deviceID: req.deviceID, //human made unqiue device ID (stored on device)
+                measurements: [{
+                    waterLevel: req.waterLevel
+                }]
+            });
+        } else { //if m is found just update waterlevel
+            console.log(m);
 
-    pole.save(function (err, pole) {
-      if (error) return console.error(err);
-      console.log(pole);
-    });
-  });
-  res.send('update?');
+            //Add new water level measurement (and clarity if we have it)
+            m.measurements.push({
+                waterLevel: req.waterLevel
+                //Should auto dateTime
+            });
 
+            //save the measurement to the server
+            m.save(function(err, m) {
+                if (err) return console.error(err);
+                console.log('updated', m);
+            });
+        }
+    });
 });
 
 // get from DB
@@ -95,13 +121,13 @@ app.post("/update_pole", function (req, res) {
 //   }
 // });
 
-app.post("/measurements", function (req, res) {
-  console.log(req);
-  var measurement = new Measurement({
+// app.post("/measurements", function(req, res) {
+//     console.log(req);
+//     var measurement = new Measurement({
+//
+//     });
+// });
 
-  });
-});
-
-app.listen(8080, function () {
-	console.info('Server listening on port ' + this.address().port);
+app.listen(8080, function() {
+    console.info('Server listening on port ' + this.address().port);
 });
