@@ -141,7 +141,6 @@ function track(aAvg, bAvg, aRead, bRead){
 	var dir = 1; //1 == up, 0 == down
 	var time = new Date().getTime();
 	var lastTriggerTime = 0;
-	var prevTrigger = null; //0 for A, 1 for B
 	var currState = 0; //0 == in-between, 1 == A, 2 == B
 	var triggerPair = [null, null];
 
@@ -167,10 +166,7 @@ function track(aAvg, bAvg, aRead, bRead){
 					if (triggerPair.triggerTime != null){
 						lastTriggerTime = triggerPair.triggerTime;
 					}
-					//the trigger analysis might return a direction, which if it does, should be used to update the direction
-					if (triggerAnalysis.flowDir != null){
-						dir = triggerAnalysis.flowDir;
-					}
+					dir = triggerAnalysis.flowDir;
 				}
 				//set the current state to 1, indicating Sensor A is currently activated
 				currState = 1;
@@ -178,9 +174,10 @@ function track(aAvg, bAvg, aRead, bRead){
 				if (currState!=2){
 					var triggerAnalysis = analyzeTrigger(1, triggerPair, lastTriggerTime);
 					triggerPair = triggerAnalysis.pair;
-					if (triggerAnalysis.flowDir != null){
-						dir = triggerAnalysis.flowDir;
+					if (triggerPair.triggerTime != null){
+						lastTriggerTime = triggerPair.triggerTime;
 					}
+					dir = triggerAnalysis.flowDir;
 				}
 				currState = 2;
 			}else{
@@ -197,9 +194,11 @@ function track(aAvg, bAvg, aRead, bRead){
 			}else if(dir == 0){
 				height-=increment;
 			}
-			process.stdout.clearLine();
-			process.stdout.cursorTo(0);
-			process.stdout.write(String(height));
+			if (dir != null){
+				process.stdout.clearLine();
+				process.stdout.cursorTo(0);
+				process.stdout.write(String(height));
+			}
 		}
 	}
 }
