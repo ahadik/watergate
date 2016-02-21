@@ -126,6 +126,9 @@ function analyzeTrigger(sensorTriggered, triggerPair, lastTriggerTime){
 	return {pair : triggerPair, flowDir : dir, triggerTime : lastTriggerTime};
 }
 
+var callibration = calibrate();
+track(callibration.aAvg, callibration.bAvg, readAPin, readBPin);
+
 function track(aAvg, bAvg, aRead, bRead){
 	ledAPin.write(1);
 	ledBPin.write(1);
