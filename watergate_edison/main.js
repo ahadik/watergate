@@ -13,7 +13,7 @@ ledAPin.dir(mraa.DIR_OUT); //set the gpio direction to output
 var height = 0;
 var speed = 0;
 var increment = 1.45;
-var triggerLevel = 350;
+var triggerLevel = 500;
 var currPair = null;
 var currDiff = false;
 
@@ -225,6 +225,9 @@ function track(aAvg, bAvg, aRead, bRead){
 		//process.stdout.write("Direction: "+String(dir)+"State: "+String(currState));
 		//console.log("Direction: "+String(dir));
 		//console.log("State: "+String(currState));
+		if(currDiff){
+			console.log(currPair);
+		}
 		if (currState != 0 && currDiff){
 			if (dir == 1){
 				height+=increment;
