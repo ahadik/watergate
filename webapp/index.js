@@ -1,7 +1,15 @@
 /* global __dirname */
 var express = require("express"),
     app = express(),
-    mongoose = require('mongoose');
+    http = require('http').Server(app),
+    io = require('socket.io')(http),
+    // http = require('http'),
+    // server = http.createServer(app),
+    // io = require('socket.io').listen(server),
+    mongoose = require('mongoose'),
+    path = require('path');
+
+app.use(express.static(path.join(__dirname, 'public'))); //Set root to public
 
 /**SET MongoDB URL**/
 var mURL = "";
@@ -11,14 +19,17 @@ if (process.env.ENVIRONMENT == "dev") {
 } else { //production
     mURL = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASS + '@aws-us-east-1-portal.10.dblayer.com:10576,aws-us-east-1-portal.11.dblayer.com:27055/watergatedb';
 }
+/**CONNECT TO MONGO DB**/
 mongoose.connect(mURL, function (err) {
-    console.log(err);
+    if (err) console.log(err);
 });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Mongodb connection error:'));
 db.once('open', function() {
     console.log('connected to mongodb');
 });
+
+
 
 
 /**DEFINE SCHEMA**/
@@ -58,6 +69,11 @@ var measurementSchema = mongoose.Schema({
 var Measurement = mongoose.model('Measurement', measurementSchema);
 
 /**API CALLS**/
+
+app.get("/measurements", function (req, res) {
+    console.log("getting measurements");
+    res.sendFile(path.join(__dirname, "public", "index.html")); //Send back html file
+});
 
 //register a Pole
 app.post("/register_pole", function(req, res) {
@@ -137,6 +153,14 @@ app.post("/post_measurement", function(req, res) {
 //     });
 // });
 
-app.listen(8080, function() {
+io.on('connection', function(socket){
+    console.log('a user connected');
+    // socket.on('test', function(msg){ //receive things
+    //     console.log(msg);
+    //     io.emit('test', "resturnignding"); //emit things
+    // });
+});
+
+http.listen(8080, function() {
     console.info('Server listening on port ' + this.address().port);
 });
