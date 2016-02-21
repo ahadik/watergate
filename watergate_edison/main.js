@@ -53,7 +53,7 @@ OUTPUT:
 	false: the sensor is not sufficiently triggered
 */
 function sensorTest(level, avg){
-	if (level > avg+50){
+	if (level > avg+450){
 		return true;
 	}
 	return false;
@@ -128,7 +128,9 @@ function analyzeTrigger(sensorTriggered, triggerPair, lastTriggerTime){
 	return {pair : triggerPair, flowDir : dir, triggerTime : lastTriggerTime};
 }
 
+console.log("Calibrating...");
 var calibration = calibrate();
+console.log("Running main loop...");
 track(calibration.aAvg, calibration.bAvg, readAPin, readBPin);
 
 function track(aAvg, bAvg, aRead, bRead){
