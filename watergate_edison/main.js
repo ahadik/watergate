@@ -155,9 +155,15 @@ function track(aAvg, bAvg, aRead, bRead){
 			var bTrigger = sensorTest(bLevel, bAvg);
 			//if both sensors have been tripped, throw an error to improve calibration
 			if (aTrigger && bTrigger){
-				throw new doubleTriggerError('Both sensors triggered simultaneously.\nSensor A Avg: '+aAvg+'\nSensor B Avg: '+bAvg+'\nSensor A Reading: '+aLevel+'\nSensor B Reading: '+bLevel, 0);
+				if (aLevel > bLevel){
+					bTrigger = false;
+				}else{
+					aTrigger = false;
+				}
+				//throw new doubleTriggerError('Both sensors triggered simultaneously.\nSensor A Avg: '+aAvg+'\nSensor B Avg: '+bAvg+'\nSensor A Reading: '+aLevel+'\nSensor B Reading: '+bLevel, 0);
 			//if Sensor A has been triggered
-			}else if (aTrigger){
+			}
+			if (aTrigger){
 				//and if the current state isn't Sensor A
 				if (currState!=1){
 					//Analyze the trigger
