@@ -1,4 +1,4 @@
-package com.austinhack.watergate.watergate;
+package com.austinhack.watergate;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
