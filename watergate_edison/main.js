@@ -138,7 +138,7 @@ function track(aAvg, bAvg, aRead, bRead){
 	ledBPin.write(1);
 	var aFlag = false;
 	var bFlag = false;
-	var dir = 1; //1 == up, 0 == down
+	var dir = null; //1 == up, 0 == down
 	var time = new Date().getTime();
 	var lastTriggerTime = 0;
 	var currState = 0; //0 == in-between, 1 == A, 2 == B
@@ -190,7 +190,7 @@ function track(aAvg, bAvg, aRead, bRead){
 		}
 		process.stdout.clearLine();
 		process.stdout.cursorTo(0);
-		process.stdout.write(String(dir));
+		process.stdout.write("Direction: "+String(dir)+" State: "+String(currState));
 		if (currState != 0){
 			if (dir == 1){
 				height+=increment;
