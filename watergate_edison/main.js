@@ -197,7 +197,7 @@ function track(aAvg, bAvg, aRead, bRead){
 			}
 			process.stdout.clearLine();
 			process.stdout.cursorTo(0);
-			process.stdout.write(height);
+			process.stdout.write(String(height));
 		}
 	}
 }
