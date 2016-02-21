@@ -86,6 +86,7 @@ OUTPUT:
 	1: the trolley is traveling up
 */
 function analyzeTriggerPair(pair){
+	console.log(pair);
 	try{
 		var isDiff = true;
 		//if the entries are equal, we don't know if the trolley is traveling up or down
