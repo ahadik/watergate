@@ -93,6 +93,7 @@ function analyzeTriggerPair(pair){
 			throw new invalidPairError('Trigger Pair contains values ['+pair[0]+','+pair[1]+']. Valid pair values are 0 and 1.', 0);
 		}
 	}catch(err){
+		console.log(err.stack);
 		console.log(err.message);
 	}
 }
@@ -186,6 +187,7 @@ function track(aAvg, bAvg, aRead, bRead){
 				currState = 0;
 			}
 		}catch(err){
+			console.log(err.stack);
 			console.log(err.message);
 		}
 		if (currState != 0){
