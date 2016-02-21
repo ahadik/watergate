@@ -237,8 +237,9 @@ function track(aAvg, bAvg, aRead, bRead){
 			if (dir != null){
 				console.log(String(height.toFixed(2)));
 				myLcd.write(String(height.toFixed(2)));
-				if (height > storedHeight+5){
+				if (height > (storedHeight+5)){
 					storedHeight = height;
+					console.log("POST");
 					request.post(
 						'http://10.11.16.134:8080/post_measurement',
 						{ form: {deviceID : deviceID, waterLevel: String(height.toFixed(2))}},
