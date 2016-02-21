@@ -242,11 +242,13 @@ function track(aAvg, bAvg, aRead, bRead){
 				if (height > (storedHeight+5)){
 					storedHeight = height;
 					console.log("POST");
-					request.post(
+					request(
 						{
 						  url:     'http://10.11.16.134:8080/post_measurement',
+						  json: true,
 						  form:    {deviceID : deviceID, waterLevel : String(height.toFixed(2))}
 						},	function (error, response, body) {
+							console.log("HERE");
 							if (!error && response.statusCode == 200) {
 								console.log(body)
 							}
