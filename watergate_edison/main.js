@@ -242,6 +242,8 @@ function track(aAvg, bAvg, aRead, bRead){
 				if (height > (storedHeight+5)){
 					storedHeight = height;
 					console.log("POST");
+					request.post({url : 'http://10.11.16.134:8080/post_measurement', form : {}});
+					/*
 					request(
 						{
 						  url:     'http://10.11.16.134:8080/post_measurement',
@@ -254,6 +256,7 @@ function track(aAvg, bAvg, aRead, bRead){
 							}
 						}
 					);
+				*/
 				}
 			}
 		}
