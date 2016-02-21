@@ -15,8 +15,9 @@ var gulp = require('gulp'),
     imagemin = require('gulp-imagemin'),
     cfenv = require('cfenv'),
     gulpif = require('gulp-if'),
-    browserSync = require('browser-sync');
-
+    browserSync = require('browser-sync'),
+    mainBowerFiles = require('main-bower-files'),
+    gulpFilter = require('gulp-filter');
 //////////////////////////////
 // Variables
 //////////////////////////////
@@ -164,13 +165,27 @@ gulp.task('nodemon', function (cb) {
 //////////////////////////////
 gulp.task('browser-sync', ['nodemon'], function () {
   var appEnv = cfenv.getAppEnv();
-  appEnv.url = 'https://localhost:3000/index';
+  appEnv.url = 'localhost:8080/measurements';
   browserSync.init({
 	port: 8000,
-	https: true,
+	// https: true,
     'proxy': appEnv.url
   });
 });
+
+//////////////////////////////
+// Bower File Move
+//////////////////////////////
+// gulp.task('bower-js', function() {
+//
+// 	// var jsFiles = ['bower_components/*'];
+//     console.log(mainBowerFiles());
+// 	gulp.src("bower_components/socket.io/")//mainBowerFiles())
+// 		.pipe(gulpFilter('*.js'))
+// 		//.pipe(uglify())
+// 		.pipe(gulp.dest('./public/bower-js/'));
+//
+// });
 
 //////////////////////////////
 // Running Tasks
@@ -181,4 +196,4 @@ gulp.task('test', ['build']);
 
 gulp.task('watch', ['eslint:watch', 'uglify:watch', 'html:watch', 'sass:watch', 'images:watch']);
 
-gulp.task('default', ['browser-sync', 'build', 'watch']);
+gulp.task('default', ['build', 'watch']);

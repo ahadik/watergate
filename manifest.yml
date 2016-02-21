@@ -1,8 +1,8 @@
 applications:
-- path: .
-  memory: 256M
-  instances: 1
-  domain: mybluemix.net
-  name: Watergate
-  host: watergate
-  disk_quota: 1024M
+  - disk_quota: 1024M
+    host: Watergate
+    name: Watergate
+    path: ./webapp
+    domain: mybluemix.net
+    instances: 1
+    memory: 256M

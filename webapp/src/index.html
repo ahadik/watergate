@@ -1,17 +1,29 @@
 <html>
 	<head>
-		<script src="/socket.io/socket.io.js"></script>
+		<!-- <script src="/socket.io/socket.io.js"></script> -->
+		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 		<script>
-			var socket = io();
-			io.on('connection', function(socket){
-				socket.on('updates', function(msg){
-					var text = document.createTextNode(String(msg.measurement)+' cm');
-				    document.querySelector('#wrapper span').innerText = text.textContent;
-				  });
-			});
+			window.onload = function () {
+				var socket = io();
+				console.log("ready");
+				socket.on('connection', function(socket){
+					console.log('connecting');
+					// socket.on('updates', function(msg){
+					// 	var text = document.createTextNode(String(msg.measurement)+' cm');
+					//     document.querySelector('#wrapper span').innerText = text.textContent;
+					//   });
+				});
+				socket.on('')
+				// socket.on('test', function(msg) { //receive things
+				// 	console.log(msg);
+				// });
+				// socket.emit('test', "hey");//emit things
+			};
+
 		</script>
 	</head>
 	<body>
+		HELLO WORLD!!!
 		<div id="wrapper"><span></span></div>
 	</body>
 </html>
