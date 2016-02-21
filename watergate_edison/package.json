@@ -10,6 +10,7 @@
   	"jsupm_grove" : "^0.4.1",
   	"jsupm_i2clcd" : "^0.4.1",
   	"sleep" : "^3.0.1",
-	"mraa" : "^0.9.3"
+	"mraa" : "^0.9.3",
+	"request" : "2.69.0"
   }
 }

@@ -3,6 +3,8 @@ var groveSensor = require('jsupm_grove');
 var sleep = require('sleep');
 var LCD = require('jsupm_i2clcd');
 var doubleTriggerError = require('./errors/doubleTrigger');
+var request = require('request');
+var deviceID=123;
 
 //var myOnboardLed = new mraa.Gpio(3, false, true); //LED hooked up to digital pin (or built in pin on Galileo Gen1)
 var ledAPin = new mraa.Gpio(3); //LED hooked up to digital pin 13 (or built in pin on Intel Galileo Gen2 as well as Intel Edison)
@@ -14,6 +16,7 @@ ledBPin.dir(mraa.DIR_OUT); //set the gpio direction to output
 var myLcd = new LCD.Jhd1313m1(0);
 myLcd.setColor(64,255,64);
 
+var storedHeight = 0;
 var height = 0;
 var speed = 0;
 var increment = 1.45;
@@ -232,11 +235,20 @@ function track(aAvg, bAvg, aRead, bRead){
 				height-=increment;
 			}
 			if (dir != null){
-				//process.stdout.clearLine();
-				//process.stdout.cursorTo(0);
-				//process.stdout.write(String(height));
-				console.log(String(height));
-				myLcd.write(String(height));
+				console.log(String(height.toFixed(2));
+				myLcd.write(String(height.toFixed(2)));
+				if (height > storedHeight+5){
+					storedHeight = height;
+					request.post(
+						'http://10.11.16.134:8080/post_measurement',
+						{ form: {deviceID : deviceID, waterLevel: String(height.toFixed(2))}},
+						function (error, response, body) {
+							if (!error && response.statusCode == 200) {
+								console.log(body)
+							}
+						}
+					);
+				}
 			}
 		}
 	}
