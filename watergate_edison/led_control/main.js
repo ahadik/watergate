@@ -20,8 +20,10 @@ var mraa = require('mraa'); //require mraa
 var groveSensor = require('jsupm_grove');
 
 //var myOnboardLed = new mraa.Gpio(3, false, true); //LED hooked up to digital pin (or built in pin on Galileo Gen1)
-var ledAPin = new mraa.Gpio(4); //LED hooked up to digital pin 13 (or built in pin on Intel Galileo Gen2 as well as Intel Edison)
+var ledAPin = new mraa.Gpio(3); //LED hooked up to digital pin 13 (or built in pin on Intel Galileo Gen2 as well as Intel Edison)
+var ledBPin = new.mraa.Gpio(4);
 var readAPin = new groveSensor.GroveLight(0);
+var readBPin = new groveSensor.GroveLight(1);
 ledAPin.dir(mraa.DIR_OUT); //set the gpio direction to output
 readAPin.dir(mraa.DIR_IN);
 ledAPin.write(1);
@@ -32,7 +34,6 @@ function readInLoop(){
 		var level = readAPin.raw_value();
 		console.log(level);
 	}
-
-
-
 }
+
+function 
