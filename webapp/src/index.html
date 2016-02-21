@@ -1,0 +1,17 @@
+<html>
+	<head>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			var socket = io();
+			io.on('connection', function(socket){
+				socket.on('updates', function(msg){
+					var text = document.createTextNode(String(msg.measurement)+' cm');
+				    document.querySelector('#wrapper span').innerText = text.textContent;
+				  });
+			});
+		</script>
+	</head>
+	<body>
+		<div id="wrapper"><span></span></div>
+	</body>
+</html>
