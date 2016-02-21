@@ -13,7 +13,10 @@
 					//     document.querySelector('#wrapper span').innerText = text.textContent;
 					//   });
 				});
-				socket.on('')
+				socket.on('data', function (data) {
+					var measurements = JSON.parse(data);
+					console.log(measurements);
+				});
 				// socket.on('test', function(msg) { //receive things
 				// 	console.log(msg);
 				// });
@@ -24,6 +27,10 @@
 	</head>
 	<body>
 		HELLO WORLD!!!
-		<div id="wrapper"><span></span></div>
+		<div id="wrapper"><span>
+			{{#each test}}
+				<div>{{this}}</div>
+			{{/each}}
+		</span></div>
 	</body>
 </html>

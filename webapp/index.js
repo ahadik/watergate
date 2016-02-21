@@ -7,9 +7,13 @@ var express = require("express"),
     // server = http.createServer(app),
     // io = require('socket.io').listen(server),
     mongoose = require('mongoose'),
-    path = require('path');
+    path = require('path'),
+    hbs = require("hbs");
+
 
 app.use(express.static(path.join(__dirname, 'public'))); //Set root to public
+app.set("view engine", "html");
+app.engine("html", hbs.__express); //set view engine to handlebars
 
 /**SET MongoDB URL**/
 var mURL = "";
@@ -72,7 +76,15 @@ var Measurement = mongoose.model('Measurement', measurementSchema);
 
 app.get("/measurements", function (req, res) {
     console.log("getting measurements");
-    res.sendFile(path.join(__dirname, "public", "index.html")); //Send back html file
+    //res.sendFile(path.join(__dirname, "public", "index.html")); //Send back html file
+    var data;
+    Pole.find(function (err, measurements) {
+        if (err) return console.error(err);
+        console.log(measurements);
+        data = measurements;
+    });
+    res.render(path.join(__dirname, "public", "index.html"), {test: JSON.stringify(data)}); //Handlebars stuff
+
 });
 
 //register a Pole
@@ -104,6 +116,7 @@ app.post("/register_pole", function(req, res) {
 
 });
 
+
 //Update a poles measurements
 //use deviceID to find and update various measurements
 app.post("/post_measurement", function(req, res) {
@@ -114,12 +127,13 @@ app.post("/post_measurement", function(req, res) {
     }, function(err, m) {
         if (err) return console.error(err);
         if (typeof m === 'undefined') { //if no device found with that ID create a new one
-            var measurement = new Measurement({
+            m = new Measurement({
                 deviceID: req.query.deviceID, //human made unqiue device ID (stored on device)
                 measurements: [{
                     waterLevel: req.query.waterLevel
                 }]
             });
+
         } else { //if m is found just update waterlevel
             console.log(m);
 
@@ -128,15 +142,21 @@ app.post("/post_measurement", function(req, res) {
                 waterLevel: req.query.waterLevel
                     //Should auto dateTime
             });
-
-            //save the measurement to the server
-            m.save(function(err, m) {
-                if (err) return console.error(err);
-                console.log('updated', m);
-            });
         }
+        //save updated m
+        m.save(function(err, m) {
+            if (err) return console.error(err);
+            console.log('updated', m);
+        }).then(function (product) {
+            console.log("product", product.toString());
+            emitData(product);
+        });
     });
 });
+
+function emitData (data) {
+    io.emit('data', JSON.stringify(data));
+}
 
 // get from DB
 // Pole.find(function (err, poles) {
@@ -155,11 +175,14 @@ app.post("/post_measurement", function(req, res) {
 
 io.on('connection', function(socket){
     console.log('a user connected');
+    //on connection begin emiting data
+
     // socket.on('test', function(msg){ //receive things
     //     console.log(msg);
     //     io.emit('test', "resturnignding"); //emit things
     // });
 });
+
 
 http.listen(8080, function() {
     console.info('Server listening on port ' + this.address().port);
