@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">Watergate</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="title_activity_settings">Flood Marker Setting</string>
-
+    <string name="action_settings">Settings</string>
 </resources>
