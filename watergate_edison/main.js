@@ -4,7 +4,7 @@ var sleep = require('sleep');
 var LCD = require('jsupm_i2clcd');
 var doubleTriggerError = require('./errors/doubleTrigger');
 var request = require('request');
-var json = require('json');
+
 var deviceID=123;
 
 //var myOnboardLed = new mraa.Gpio(3, false, true); //LED hooked up to digital pin (or built in pin on Galileo Gen1)
@@ -245,7 +245,7 @@ function track(aAvg, bAvg, aRead, bRead){
 					request.post(
 						{
 						  url:     'http://10.11.16.134:8080/post_measurement',
-						  form:    {deviceID : deviceID, waterLevel : String(height).toFixed(2))}
+						  form:    {deviceID : deviceID, waterLevel : String(height.toFixed(2))}
 						},	function (error, response, body) {
 							if (!error && response.statusCode == 200) {
 								console.log(body)
