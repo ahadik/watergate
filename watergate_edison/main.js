@@ -248,7 +248,7 @@ function track(aAvg, bAvg, aRead, bRead){
 						  json: true,
 						  form:    {deviceID : deviceID, waterLevel : String(height.toFixed(2))}
 						},	function (error, response, body) {
-							console.log("HERE");
+							console.log("HERE!");
 							if (!error && response.statusCode == 200) {
 								console.log(body)
 							}
