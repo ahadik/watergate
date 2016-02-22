@@ -1,6 +1,7 @@
 /* global __dirname */
 var express = require("express"),
     app = express(),
+    bodyParser = require('body-parser'),
     http = require('http').Server(app),
     io = require('socket.io')(http),
     // http = require('http'),
@@ -10,7 +11,7 @@ var express = require("express"),
     path = require('path'),
     hbs = require("hbs");
 
-
+app.use(bodyParser());
 app.use(express.static(path.join(__dirname, 'public'))); //Set root to public
 app.set("view engine", "html");
 app.engine("html", hbs.__express); //set view engine to handlebars
@@ -78,9 +79,9 @@ app.get("/measurements", function (req, res) {
     console.log("getting measurements");
     //res.sendFile(path.join(__dirname, "public", "index.html")); //Send back html file
     var data;
-    Pole.find(function (err, measurements) {
+    Measurement.find(function (err, measurements) {
         if (err) return console.error(err);
-        console.log(measurements);
+        console.log(measurements.toString());
         data = measurements;
         res.render(path.join(__dirname, "public", "index.html"), {test: data}); //Handlebars stuff
     });
@@ -116,11 +117,11 @@ app.post("/register_pole", function(req, res) {
 
 });
 
-function makeData() {
-    for (var i = 0; i < 15; i++) {
-
-    }
-}
+// function makeData() {
+//     for (var i = 0; i < 15; i++) {
+//
+//     }
+// }
 
 
 //Update a poles measurements

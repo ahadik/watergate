@@ -20,6 +20,7 @@
   "author": "Alexander Hadik",
   "license": "Apache-2.0",
   "dependencies": {
+    "body-parser": "^1.15.0",
     "bower": "^1.4.1",
     "cfenv": "^1.0.0",
     "express": "^4.13.3",
