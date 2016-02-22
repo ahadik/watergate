@@ -75,15 +75,18 @@ public class RegisterActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        //.setAction("Action", null).show();
+
                 EditText deviceIDInput = (EditText) findViewById(R.id.textDeviceID);
                 String deviceID = deviceIDInput.getText().toString();
                 if (deviceID == "") {
                     deviceID = "Default";
                 }
+                Snackbar.make(view, "Added device: " + deviceID, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
 
                 NetworkRequest("register_pole?deviceID=" + deviceID + "&lat=1&long=2");
+
+                deviceIDInput.setText("");
 
             }
         });
@@ -116,6 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
         String url = "http://10.11.16.134:8080/" + dest; //Remember to update this each time
         Log.i("DEBUG", url);
 
+        //Switch this to JSON
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

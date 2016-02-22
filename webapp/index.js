@@ -1,7 +1,20 @@
 /* global __dirname */
 var express = require("express"),
     app = express(),
-    mongoose = require('mongoose');
+    bodyParser = require('body-parser'),
+    http = require('http').Server(app),
+    io = require('socket.io')(http),
+    // http = require('http'),
+    // server = http.createServer(app),
+    // io = require('socket.io').listen(server),
+    mongoose = require('mongoose'),
+    path = require('path'),
+    hbs = require("hbs");
+
+app.use(bodyParser());
+app.use(express.static(path.join(__dirname, 'public'))); //Set root to public
+app.set("view engine", "html");
+app.engine("html", hbs.__express); //set view engine to handlebars
 
 /**SET MongoDB URL**/
 var mURL = "";
@@ -11,14 +24,17 @@ if (process.env.ENVIRONMENT == "dev") {
 } else { //production
     mURL = 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASS + '@aws-us-east-1-portal.10.dblayer.com:10576,aws-us-east-1-portal.11.dblayer.com:27055/watergatedb';
 }
+/**CONNECT TO MONGO DB**/
 mongoose.connect(mURL, function (err) {
-    console.log(err);
+    if (err) console.log(err);
 });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Mongodb connection error:'));
 db.once('open', function() {
     console.log('connected to mongodb');
 });
+
+
 
 
 /**DEFINE SCHEMA**/
@@ -59,6 +75,19 @@ var Measurement = mongoose.model('Measurement', measurementSchema);
 
 /**API CALLS**/
 
+app.get("/measurements", function (req, res) {
+    console.log("getting measurements");
+    //res.sendFile(path.join(__dirname, "public", "index.html")); //Send back html file
+    var data;
+    Measurement.find(function (err, measurements) {
+        if (err) return console.error(err);
+        console.log(measurements.toString());
+        data = measurements;
+        res.render(path.join(__dirname, "public", "index.html"), {test: data}); //Handlebars stuff
+    });
+
+});
+
 //register a Pole
 app.post("/register_pole", function(req, res) {
     console.log('registering pole', req.query.name);
@@ -88,39 +117,53 @@ app.post("/register_pole", function(req, res) {
 
 });
 
+// function makeData() {
+//     for (var i = 0; i < 15; i++) {
+//
+//     }
+// }
+
+
 //Update a poles measurements
 //use deviceID to find and update various measurements
 app.post("/post_measurement", function(req, res) {
-    console.log('starting update');
+    console.log('starting update', req.body);
     //Should find a single document of measurements based on given deviceID
     Measurement.findOne({
         deviceID: req.query.deviceID
     }, function(err, m) {
         if (err) return console.error(err);
-        if (typeof m === 'undefined') { //if no device found with that ID create a new one
-            var measurement = new Measurement({
+        if (typeof m === 'undefined' || m === null) { //if no device found with that ID create a new one
+            m = new Measurement({
                 deviceID: req.query.deviceID, //human made unqiue device ID (stored on device)
                 measurements: [{
                     waterLevel: req.query.waterLevel
                 }]
             });
+
         } else { //if m is found just update waterlevel
-            console.log(m);
+            console.log(m.toString());
 
             //Add new water level measurement (and clarity if we have it)
             m.measurements.push({
                 waterLevel: req.query.waterLevel
                     //Should auto dateTime
             });
-
-            //save the measurement to the server
-            m.save(function(err, m) {
-                if (err) return console.error(err);
-                console.log('updated', m);
-            });
         }
+        //save updated m
+        m.save(function(err, m) {
+            if (err) return console.error(err);
+            console.log('updated', m.toString());
+        }).then(function (product) {
+            console.log("product", product.toString());
+            emitData(product);
+        });
     });
 });
+
+function emitData (data) {
+    io.emit('data', JSON.stringify(data));
+}
 
 // get from DB
 // Pole.find(function (err, poles) {
@@ -137,6 +180,17 @@ app.post("/post_measurement", function(req, res) {
 //     });
 // });
 
-app.listen(8080, function() {
+io.on('connection', function(socket){
+    console.log('a user connected');
+    //on connection begin emiting data
+
+    // socket.on('test', function(msg){ //receive things
+    //     console.log(msg);
+    //     io.emit('test', "resturnignding"); //emit things
+    // });
+});
+
+
+http.listen(8080, function() {
     console.info('Server listening on port ' + this.address().port);
 });
